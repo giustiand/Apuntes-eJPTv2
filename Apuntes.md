@@ -4,7 +4,7 @@ Si quiero obtener una reverse shell en mi máquina atacante, primero debo conoce
 `hostname -I` 
 
 Ahora, puedo ir a la página revshells.com y generar el payload.  
-![1](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/Apuntes.md?plain=1). 
+![1](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/1.jpg). 
 
 
 En la página, ingreso la dirección IP de la máquina atacante y genero el payload.  
