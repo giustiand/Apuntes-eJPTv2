@@ -93,7 +93,13 @@ Con el comando show options puedo ver todas las opciones disponibles para el exp
 
 ![3](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/3.jpg).   
 
-![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg).   
+![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg).  
+
+Y finalmente, con el comando run o exploit lanzaré el ataque, y si todo funciona correctamente, obtendré una meterpreter shell.  
+
+![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg).  
+
+
 
 
 
