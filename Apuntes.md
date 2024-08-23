@@ -156,6 +156,28 @@ Ahora, si ejecuto el archivo malicioso en la máquina víctima, obtendré una se
 
 ![12](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/12.jpg)  
 
+# Uso de Hydra – Ataques de fuerza bruta a contraseñas (SSH y FTP)  
+Puedo utilizar Hydra para realizar ataques de fuerza bruta.    
+Si, por ejemplo, conozco uno o más nombres de usuario, puedo intentar hacer un ataque de fuerza bruta escribiendo:  
+
+`sudo hydra -l juan -P /usr/share/wordlists/rockyou.txt ssh://10.10.10.7`  
+
+Utilizaré el parámetro `-l` en minúscula porque conozco el nombre del usuario; de lo contrario, habría usado el parámetro `-L`.    
+Lo mismo para la contraseña: `-P` porque utilizo un diccionario; si no, habría usado `-p` seguido de la contraseña.  
+
+![13](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/13.jpg)    
+
+Si hubiera querido atacar FTP, solo habría que cambiar el parámetro en el comando:  
+
+`sudo hydra -l juan -P /usr/share/wordlists/rockyou.txt ftp://10.10.10.7`   
+
+![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)     
+
+
+
+
+
+
 
 
 
