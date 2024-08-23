@@ -171,8 +171,22 @@ Si hubiera querido atacar FTP, solo habría que cambiar el parámetro en el coma
 
 `sudo hydra -l juan -P /usr/share/wordlists/rockyou.txt ftp://10.10.10.7`   
 
-![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)     
+![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)   
 
+# Uso de Hydra – Attacchi di forza bruta a utenti (SSH ed FTP)  
+
+Ahora veamos qué diccionario utilizar para enumerar los usuarios, suponiendo que ya conocemos la contraseña.  
+
+`sudo hydra -L /usr/share/wordlists/metasploit/unix_users.txt -p alexis ssh://10.10.10.7 `  
+
+![15](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/15.jpg)    
+
+Si quisiera atacar FTP, escribiría el mismo comando y cambiaría solo el parámetro al final, como se vio anteriormente.  
+
+**TIPS**  
+Para el examen, usa estos diccionarios:  
+- **USUARIOS** ==> `/usr/share/wordlists/metasploit/unix_users.txt`  
+- **CONTRASEÑAS** ==> `/usr/share/wordlists/rockyou.txt`
 
 
 
