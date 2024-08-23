@@ -470,7 +470,7 @@ Y voilà, hemos obtenido una reverse shell.
 
 ![44](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/44.jpg)  
 
-****TIPS***  
+***TIPS** 
 Lamentablemente, la shell generada con `msfvenom` no siempre es muy estable.   
 Para trabajar con más calma y evitar problemas de desconexiones, es recomendable ponerse en escucha en otro puerto, por ejemplo el 7070.   
 Luego, puedes generar una reverse shell desde una página web como revshells.com.   
