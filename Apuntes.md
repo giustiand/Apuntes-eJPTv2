@@ -386,6 +386,40 @@ Para poder visualizarlo, deberé editar nuevamente el archivo `/etc/hosts` y agr
 
 ![37](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/37.jpg)   
 
+# Cómo realizar un ataque de transferencia de zona DNS 
+Supongamos que durante una exploración con Nmap encontramos abiertas la **puerta 53** (DNS) y la **puerta 80**, donde aparece un dominio, en este caso `hunterzone.nyx`.  
+
+![38](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/38.jpg)    
+
+Es importante entender que debo intentar enumerar tantos dominios y subdominios como sea posible, ya que son vehículos para descubrir información y lanzar ataques.  
+En este caso, podría intentar un ataque de transferencia de zona DNS con la herramienta `dig`.  
+Primero, modifico el archivo `/etc/hosts`, como hemos visto anteriormente, e ingreso el dominio `hunterzone.nyx`. Luego, lanzo el comando `dig` de la siguiente manera:  
+
+`sudo dig axfr hunterzone.nyx @10.10.10.11`  
+
+![39](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/39.jpg)    
+
+En este caso, también debería agregar al archivo `/etc/hosts` todos los subdominios descubiertos.  
+
+![40](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/40.jpg)     
+
+Ahora, como hemos visto anteriormente, podría enumerar los subdominios con Wfuzz usando el comando:  
+
+`sudo wfuzz -c --hc=404 --hl=367 -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H "Host:FUZZ.devhunter.nyx" -u 10.10.10.11`  
+
+**TIPS**  
+Para enumerar los subdominios, el diccionario más adecuado es:    
+`/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt`
+
+
+
+
+
+
+
+
+
+
 
 
 
