@@ -99,6 +99,29 @@ Y finalmente, con el comando run o exploit lanzaré el ataque, y si todo funcion
 
 ![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg).  
 
+# Utilizzo basico de Metasploit – Exploitation vsftpd in Linux  
+Iniciamos la máquina Metasploitable 2.0.0 y después de una primera exploración, vemos que tiene muchos puertos abiertos.  
+En particular, intentaremos analizar el puerto 21 y lanzaremos el comando:  
+
+`sudo nmap --script "vuln" -p21 10.10.10.6`  
+
+![6](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/6.jpg).   
+
+En este punto, lanzaremos Metasploit y buscaremos un exploit que podamos utilizar en este caso concreto.  
+
+![7](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/7.jpg).  
+
+Como podemos ver, el exploit 1 parece ser el adecuado para nuestro caso, así que lo seleccionamos, configuramos los parámetros necesarios y probamos a lanzar el ataque.  
+
+![8](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/8.jpg).    
+
+
+
+
+
+
+
+
 
 
 
