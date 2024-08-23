@@ -5,7 +5,7 @@ Si quiero obtener una reverse shell en mi máquina atacante, primero debo conoce
 
 Ahora, puedo ir a la página revshells.com y generar el payload.  
 
-![1](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/1.jpg). 
+![1](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/1.jpg)
 
 
 En la página, ingreso la dirección IP de la máquina atacante y genero el payload.  
@@ -87,17 +87,17 @@ O también puedo buscarlo con el nombre de la CVE correspondiente, por ejemplo:
 
 Para usar un módulo, simplemente debo escribir el comando use seguido del número correspondiente del exploit que quiero utilizar, por ejemplo, 0.  
 
-![2](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/2.jpg).   
+![2](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/2.jpg)   
 
 Con el comando show options puedo ver todas las opciones disponibles para el exploit en cuestión, y con set puedo configurar los diferentes parámetros.  
 
-![3](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/3.jpg).   
+![3](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/3.jpg) 
 
-![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg).  
+![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg)
 
 Y finalmente, con el comando run o exploit lanzaré el ataque, y si todo funciona correctamente, obtendré una meterpreter shell.  
 
-![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg).  
+![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg)
 
 # Utilizzo basico de Metasploit – Exploitation vsftpd in Linux  
 Iniciamos la máquina Metasploitable 2.0.0 y después de una primera exploración, vemos que tiene muchos puertos abiertos.  
@@ -105,15 +105,15 @@ En particular, intentaremos analizar el puerto 21 y lanzaremos el comando:
 
 `sudo nmap --script "vuln" -p21 10.10.10.6`  
 
-![6](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/6.jpg).   
+![6](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/6.jpg)  
 
 En este punto, lanzaremos Metasploit y buscaremos un exploit que podamos utilizar en este caso concreto.  
 
-![7](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/7.jpg).  
+![7](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/7.jpg)
 
 Como podemos ver, el exploit 1 parece ser el adecuado para nuestro caso, así que lo seleccionamos, configuramos los parámetros necesarios y probamos a lanzar el ataque.  
 
-![8](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/8.jpg).    
+![8](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/8.jpg)    
 
 
 
