@@ -87,6 +87,16 @@ O también puedo buscarlo con el nombre de la CVE correspondiente, por ejemplo:
 
 Para usar un módulo, simplemente debo escribir el comando use seguido del número correspondiente del exploit que quiero utilizar, por ejemplo, 0.  
 
+![2](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/2.jpg).   
+
+Con el comando show options puedo ver todas las opciones disponibles para el exploit en cuestión, y con set puedo configurar los diferentes parámetros.  
+
+![3](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/3.jpg).   
+
+![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg).   
+
+
+
 
 
 
