@@ -1,6 +1,7 @@
 # CONCEPTOS BÁSICOS DE HACKING
 # Uso de netcat
 Si quiero obtener una reverse shell en mi máquina atacante, primero debo conocer la dirección IP, que puedo obtener con el siguiente comando:  
+
 `hostname -I` 
 
 Ahora, puedo ir a la página revshells.com y generar el payload.  
@@ -136,6 +137,26 @@ Ejecuto Metasploit y escribo el comando:
 Si escribo `show options`, puedo ver las opciones disponibles:  
 
 ![10](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/10.jpg)  
+
+Debo configurar `LHOST` con la dirección IP de la máquina atacante y `LPORT` para que coincida con el puerto que he especificado durante la creación del archivo malicioso con `msfvenom` (6969 en este ejemplo).  
+
+¡ATENCIÓN! ¡También el payload debe coincidir con el utilizado durante la creación del archivo!  
+En este ejemplo, se observa que por defecto se utiliza el payload `generic/shell_reverse_tcp`, mientras que nosotros hemos especificado en `msfvenom` `windows/x64/meterpreter/reverse_tcp`.   
+
+Puedo cambiarlo escribiendo:  
+
+`set PAYLOAD windows/x64/meterpreter/reverse_tcp`    
+
+Entonces, configuro los demás parámetros.  
+
+![11](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/11.jpg)    
+
+Y finalmente lo ejecuto con el comando run, y permanecerá en escucha.  
+Ahora, si ejecuto el archivo malicioso en la máquina víctima, obtendré una sesión meterpreter.   
+
+![12](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/12.jpg)  
+
+
 
 
 
