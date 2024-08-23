@@ -113,7 +113,13 @@ En este punto, lanzaremos Metasploit y buscaremos un exploit que podamos utiliza
 
 Como podemos ver, el exploit 1 parece ser el adecuado para nuestro caso, así que lo seleccionamos, configuramos los parámetros necesarios y probamos a lanzar el ataque.  
 
-![8](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/8.jpg)    
+![8](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/8.jpg)   
+
+A veces puede ser necesario ejecutar el exploit un par de veces para que surta efecto.  
+
+![9](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/9.jpg)   
+
+
 
 
 
