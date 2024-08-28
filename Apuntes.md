@@ -703,6 +703,78 @@ Entonces habrá que tratar el tty para que funcione más cómodamente.
 
 ![79](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/79.jpg)   
 
+#Exploitation vulnerabilità local file inclusion (LFI)  
+Para entender cómo funciona esta vulnerabilidad, supongamos que después de realizar los escaneos pertinentes con nmap y fuzzing, accedemos a una página como esta.  
+
+![80](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/80.jpg)    
+
+![81](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/81.jpg)    
+
+Si abrimos la página /tools y analizamos el código fuente de la página con Ctrl + U vemos un comentario que nos puede llamar la atención.  
+
+![82](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/82.jpg)   
+
+Lo que puedo hacer es intentar abrir la página /tools añadiendo la cadena que vemos comentada en verde.    
+
+![83](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/83.jpg)   
+
+Y vemos que realmente se abre una página.  
+
+![84](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/84.jpg)   
+
+Cuando veamos una página del tipo «doc=» lo que podemos intentar es «retroceder» un nivel para ver si podemos leer por ejemplo el fichero /etc/passwd, si estamos en una máquina Linux.  
+Para ello basta con insertar una serie de «../../../../../../../../etc/passwd» después de «=».    
+
+![85](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/85.jpg)      
+
+![86](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/86.jpg)   
+
+y efectivamente la máquina es vulnerable.  
+Ahora sabemos que hay un usuario gh0st, así que podemos intentar ver si en su home, en la carpeta oculta .ssh, está la clave id_rsa que podría permitirnos conectarnos.  
+
+![87](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/87.jpg)   
+
+Y sí, podemos ver la clave id_rsa (para verla mejor podemos teclear Ctrl + u).  
+
+![88](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/88.jpg)   
+
+Copiamos la clave y creamos un nuevo documento en la máquina atacante, que llamaremos «clave.rsa».  
+Ahora podemos intentar conectarnos a la máquina pasándole la clave rsa que acabamos de crear con el comando:  
+
+`sudo ssh -i key.rsa gh0st@10.10.10.16`   
+
+![89](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/89.jpg)    
+
+Vemos que se nos pide una contraseña. 
+Y aquí es donde entra ssh2john. 
+Su uso es muy sencillo. 
+De hecho escribiremos: 
+
+`sudo ssh2john key.rsa > hash`  
+
+que creará el archivo hash, tras lo cual se lo pasaremos a john para que intente descifrar la contraseña con el comando:  
+
+`sudo john --wordlist=/usr/share/wordlists/rockyou.txt has`  
+
+Y listo  
+
+Ahora podemos intentar conectarnos con el comando visto anteriormente, y cuando nos pida una contraseña introducimos 'celtic':  
+
+`sudo ssh -i key.rsa gh0st@10.10.10.16`  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
