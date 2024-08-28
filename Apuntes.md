@@ -1,4 +1,4 @@
-# CONCEPTOS BÁSICOS DE HACKING
+![image](https://github.com/user-attachments/assets/c00bc412-5ed1-4379-afbf-845c7d253fef)# CONCEPTOS BÁSICOS DE HACKING
 # Uso de netcat
 Si quiero obtener una reverse shell en mi máquina atacante, primero debo conocer la dirección IP, que puedo obtener con el siguiente comando:  
 
@@ -756,11 +756,142 @@ que creará el archivo hash, tras lo cual se lo pasaremos a john para que intent
 
 `sudo john --wordlist=/usr/share/wordlists/rockyou.txt hash`  
 
-Y listo  
+Y listo    
+
+![90](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/90.jpg)    
 
 Ahora podemos intentar conectarnos con el comando visto anteriormente, y cuando nos pida una contraseña introducimos 'celtic':  
 
 `sudo ssh -i key.rsa gh0st@10.10.10.16`  
+
+# Enumeración y explotación básica del protocolo SMB (puerto 445) 
+Cuando veo un puerto 445 abierto, puedo intentar enumerar los recursos escribiendo este comando:  
+
+`sudo smbclient -L 10.10.10.5 -N`  
+
+El parámetro `-N` indica que quiero usar una "sesión nula", es decir, que no tengo conocimiento del nombre de usuario ni de la contraseña.  
+En caso de que conociéramos el nombre de usuario (mario en este ejemplo), podría ejecutar el siguiente comando:  
+
+`sudo hydra -l mario -P /usr/share/wordlists/rockyou.txt smb://10.10.10.5`  
+
+![91](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/91.jpg)   
+
+Ahora que tenemos la contraseña, si queremos iniciar una sesión SMB, deberemos escribir el siguiente comando:  
+
+`sudo smbclient -L //10.10.10.5 -U 'mario'`  
+
+ y una vez que introduzco la contraseña (123123 en este ejemplo) obtengo una lista de los recursos compartidos de la máquina víctima:  
+
+![92](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/92.jpg)   
+
+Sin embargo, si quisiera saber los permisos, es decir, en qué carpeta puedo entrar o no, tendría que utilizar la herramienta smbmap, escribiendo el comando:  
+
+`sudo smbmap -H 10.10.10.5 -u 'mario' -p '123123'`   
+
+![93](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/93.jpg)  
+
+Si ahora quiero acceder a un recurso compartido, tendré que teclear:  
+
+`sudo smbclient -U 'mario' //10.10.10.5/Users`  
+
+Y voila, así puedo entrar en la máquina y teclear comandos como «dir, cd etc».  
+
+![94](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/94.jpg)  
+
+# Enumeración y explotación básica del protocolo SMB con Metasploit  
+Con el módulo 'smblogin' puedo realizar ataques de fuerza bruta o iniciar una sesión smb.  
+El módulo se encuentra en auxiliary/scanner/smb/smb_login.  
+Una vez seleccionado, como siempre, teclearé el comando 'show options' y estableceré los parámetros adecuados.    
+
+![95](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/95.jpg)   
+
+![96](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/96.jpg)    
+
+CONSEJOS
+Pon el parámetro VERBOSE a false para que se ejecute un poco más rápido.  
+
+Una vez que tengo la contraseña, puedo intentar iniciar una sesión smb con el módulo  
+exploit/windows/smb/psexec.  
+Como siempre configuro las opciones y pruebo a ver si funciona. 
+Puede funcionar o no, es cuestión de probar.  
+
+![97](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/97.jpg)    
+
+# Enumeración de usuarios SAMBA y uso de RPCCLIENT 
+Supongamos que tenemos una máquina con el servicio samba activo.  
+Una cosa que puedo intentar hacer es intentar enumerar los usuarios existentes.  
+Puedo usar el comando  
+
+`sudo rpcclient -U "" -N 10.10.10.17`  
+
+Una vez ejecutado, se abre una consola donde puedo teclear 3 comandos básicos para la enumeración, que son:  
+**srvinfo** 
+**querydispinfo** 
+**enumdomusers**    
+
+![98](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/98.jpg)    
+
+Como puedo ver en este caso he obtenido dos nombres de usuario, por lo que llegados a este punto podría intentar un ataque de fuerza bruta con Hydra o con Metasploit.  
+Con este último por ejemplo puedo utilizar el módulo smb_login visto anteriormente y tras configurar las opciones ejecutarlo.  
+
+![99](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/99.jpg)   
+
+![100](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/100.jpg)    
+
+# Enumeración y explotación del protocolo SNMP  
+Supongamos que hago un escaneo nmap de los puertos UDP y encuentro el puerto 161 (SNMP) abierto.  
+Una cosa que puedo hacer es utilizar 2 herramientas que me pueden ayudar a obtener información importante.  
+
+**ONESIXTYONE**  
+Puedo utilizar este comando para intentar obtener la 'clave de comunidad' que es esencial para continuar con otros escaneos.  
+
+`sudo onesuxtyone -c /usr/share/wordlists/rockyou.txt 10.10.10.18 `  
+
+![101](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/101.jpg)  
+
+**SNMPWALK**  
+
+Una vez obtenida la clave de comunidad, que en este ejemplo es 'security', puedo utilizar esta herramienta para obtener otra información.  
+Emitiré el comando  
+
+`sudo snmpwalk -v 2c -c security 10.10.10.18`  
+
+![102](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/102.jpg)   
+
+Como puedes ver, conseguí un nombre de dominio, así que ahora puedo poner este dominio en el fichero hosts  
+
+![103](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/103.jpg)     
+
+y enumerarlo con wfuzz tecleando el comando: 
+
+`sudo wfuzz -c -L --hc=404 --hl=11 -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H "HOST: FUZZ.chaincorp.nyx" -u 10.10.10.18`  
+
+![104](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/104.jpg)    
+
+Entonces encontraría un dominio utils, y editando de nuevo el fichero hosts, también podría acceder a este dominio y continuar la enumeración.  
+
+![105](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/105.jpg)  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
