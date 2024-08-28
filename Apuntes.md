@@ -754,7 +754,7 @@ De hecho escribiremos:
 
 que creará el archivo hash, tras lo cual se lo pasaremos a john para que intente descifrar la contraseña con el comando:  
 
-`sudo john --wordlist=/usr/share/wordlists/rockyou.txt has`  
+`sudo john --wordlist=/usr/share/wordlists/rockyou.txt hash`  
 
 Y listo  
 
