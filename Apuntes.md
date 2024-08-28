@@ -600,7 +600,59 @@ Una vez que encuentre la extensión que funcione
 
 Puedo volver a la pantalla principal, cambiar la extensión por la que he visto que funciona y hacer el forward para editar la petición y enviarla al servidor.  
 
-![64](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/64.jpg)    
+![64](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/64.jpg)   
+
+# Inyecciones SQL - Uso de SQLmap  
+Para esta demostración utilizaremos la máquina Vulnyx Shop.  
+Tras ejecutar nmap y hacer fuzzing con gobuster, descubrimos que hay una url interesante, concretamente http://10.10.10.14/administrator/. 
+
+![65](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/65.jpg)     
+
+Si abrimos el enlace, nos encontramos con un panel de inicio de sesión desnudo y sin información.  
+
+![66](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/66.jpg)    
+
+Una cosa que podemos hacer en este caso es utilizar la herramienta SQLMap para intentar enumerar las bases de datos y obtener información interesante.  
+
+Para ello escribiremos el comando  
+
+`sudo sqlmap -u http://10.10.10.14/administrator/ --forms --dbs --batch`  
+
+El parámetro --dbs indica que estamos buscando bases de datos.  
+Cuando finaliza el escaneo, podemos ver que ha encontrado 4 bases de datos, 3 son las clásicas que están presentes en todas las instalaciones, pero destaca una que se llama Webapp, y que es la que vamos a intentar enumerar.  
+
+![67](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/67.jpg)      
+
+Con el segundo comando, queremos intentar obtener las tablas de esta base de datos:  
+
+`sudo sqlmap -u http://10.10.10.14/administrator/ --forms -D Webapp --tables --batch`  
+
+El resultado será éste:  
+
+![68](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/68.jpg)    
+
+Así que ahora queremos conocer el contenido de la tabla Usuarios, en concreto nos interesan las columnas que puedan contener nombres de usuario y contraseñas.  
+Para ello escribiremos el siguiente comando:  
+
+`sudo sqlmap -u http://10.10.10.14/administrator/ --forms -D Webapp -T Users --columns --batch`  
+
+El resultado será éste:  
+
+![69](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/69.jpg)   
+
+Por último, queremos conocer el contenido de estas columnas.  
+Para ello escribiremos:  
+
+`sudo sqlmap -u http://10.10.10.14/administrator/ --forms -D Webapp -T Users -C username,password -dump --batch`  
+
+Y listo, ya hemos obtenido la lista de nombres de usuario y contraseñas de la base de datos de la Webapp y ahora podríamos utilizarlos para obtener acceso a SSH, por ejemplo.   
+
+![70](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/70.jpg)     
+
+
+
+
+
 
 
 
