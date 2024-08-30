@@ -703,7 +703,7 @@ Entonces habrá que tratar el tty para que funcione más cómodamente.
 
 ![79](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/79.jpg)   
 
-#Exploitation vulnerabilità local file inclusion (LFI)  
+# Exploitation vulnerabilità local file inclusion (LFI)  
 Para entender cómo funciona esta vulnerabilidad, supongamos que después de realizar los escaneos pertinentes con nmap y fuzzing, accedemos a una página como esta.  
 
 ![80](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/80.jpg)    
