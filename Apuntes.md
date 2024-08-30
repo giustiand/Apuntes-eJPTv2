@@ -1385,14 +1385,14 @@ Si en lugar de eso quisiera redirigir otros puertos, tendré que escribir, como 
 
 SCRIPT SCAN.SH utilizado en la demostración  
 
-`#!/bin/bash
+`#!/bin/bash  
 
-for i in {1..255}; do
-        timeout 1 bash -c "ping -c 1 172.16.0.$i" >/dev/null
-        if [ $? -eq 0 ]; then
-                echo "Host 172.16.0.$i ONLINE"
-        fi
-done`  
+for i in {1..255}; do  
+        timeout 1 bash -c "ping -c 1 172.16.0.$i" >/dev/null  
+        if [ $? -eq 0 ]; then  
+                echo "Host 172.16.0.$i ONLINE"  
+        fi  
+done`    
 
 **NOTAS ADICIONALES**
 
