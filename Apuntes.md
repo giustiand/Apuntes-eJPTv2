@@ -1131,7 +1131,93 @@ Recuerda usar un LPORT diferente. En este ejemplo, se usó LPORT 6969 en el prim
 
 Una vez terminado, podré verificar si ha funcionado.  
 
-![147](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/147.jpg)    
+![147](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/147.jpg)   
+
+# Enumeración de usuarios en sistemas Windows  
+
+Si queremos enumerar todos los usuarios presentes en una máquina Windows, deberemos escribir el comando:  
+
+`net users`  
+
+**¡IMPORTANTE!**  
+Recuerda que debes escribir este comando desde una shell de Windows, porque este comando no funcionará desde una sesión meterpreter.  
+
+![148](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/148.jpg)    
+
+# PIVOTING CON METASPLOIT  
+# Pivoting en entornos Windows  
+
+ESQUEMA DE RED UTILIZADO EN ESTA SIMULACIÓN  
+Máquina Kali: 10.10.10.10    
+Máquina Win:  10.10.10.5    
+              172.16.0.5  
+Máquina Metasploitable: 172.16.0.4  
+
+Supongamos que estamos atacando una máquina Windows 7 con IP 10.10.10.5, vulnerable a EternalBlue, y obtenemos una shell meterpreter.  
+Ahora lo que podemos hacer es escribir el comando `ipconfig` para ver si hay interfaces de red adicionales.  
+
+![149](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/149.jpg)   
+
+Como podemos notar, hay otra interfaz de red en el rango 172.16.0.0.  
+Por lo tanto, podemos intentar realizar el pivoting.  
+
+**PIVOTING**  
+Lo primero que debemos hacer, después de ejecutar el comando `ifconfig`, es poner la sesión meterpreter en segundo plano con el comando `Ctrl + Z`.  
+
+![150](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/150.jpg)   
+
+Ahora usaremos un módulo que nos permitirá encontrar otras máquinas dentro de la red 172.16.0.0 que acabamos de descubrir.  
+Escribiremos entonces:  
+
+`use /windows/gather/arp_scanner`  
+
+Si ejecutamos `show options`, veremos que debemos especificar el número de la sesión (usando `sessions -l` para ver cuál es) y el rango de IP que queremos escanear (en este caso, 172.16.0.0/24).  
+
+![151](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/151.jpg)   
+
+Este será el resultado.  
+
+![152](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/152.jpg)  
+
+Descartando las direcciones 1 y 2, que corresponden al gateway, y 255, que corresponde al broadcast, encontramos la dirección 172.16.0.4 (que es la de la máquina Metasploitable).  
+
+Una vez identificada la máquina víctima, lo que deberemos hacer es "rutar" el tráfico de manera que llegue a nuestra máquina atacante.  
+Usaremos un módulo que invocaremos con el comando:  
+
+`use multi/manage/autoroute`  
+
+Lo único que deberé configurar será la sesión, en nuestro caso, la 1.  
+
+![153](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/153.jpg)    
+
+Ahora deberíamos usar un módulo que nos permitirá realizar un escaneo de puertos en la máquina dentro del rango de red que hemos descubierto. Escribiremos entonces:  
+
+`use scanner/portscan/tcp`  
+
+La única opción que debemos configurar será la IP de la máquina víctima en la nueva red que hemos descubierto (172.16.0.4 en nuestro ejemplo).  
+
+![154](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/154.jpg)  
+
+Por último, entra en juego otro módulo que activaremos con el comando:  
+
+`use post/windows/manage/portproxy`  
+
+Ahora configuramos las opciones adecuadas.  
+Debemos entender que aquí estableceremos la IP de la máquina víctima y el puerto que queremos "atacar", y como `LOCAL_ADDRESS` siempre se pondrá `0.0.0.0` y el puerto que deseamos.  
+Finalmente, configuramos la sesión.  
+
+![155](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/155.jpg)     
+
+![156](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/156.jpg)  
+
+Entonces, si quiero acceder al puerto 80 de la máquina víctima, será suficiente escribir en el navegador de la máquina atacante la IP de la máquina Windows y el puerto que hemos configurado, en este caso 7171.  
+
+http://10.10.10.5:7171  
+
+![157](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/157.jpg)    
+
+
+
 
 
 
