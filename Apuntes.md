@@ -86,7 +86,7 @@ O también puedo buscarlo con el nombre de la CVE correspondiente, por ejemplo:
 
 `search CVE-2017-0143`  
 
-Para usar un módulo, simplemente debo escribir el comando use seguido del número correspondiente del exploit que quiero utilizar, por ejemplo, 0.  
+Para usar un módulo, simplemente debo escribir el comando `use` seguido del número correspondiente del exploit que quiero utilizar, por ejemplo, 0.  
 
 ![2](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/2.jpg)   
 
@@ -96,7 +96,7 @@ Con el comando show options puedo ver todas las opciones disponibles para el exp
 
 ![4](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/4.jpg)
 
-Y finalmente, con el comando run o exploit lanzaré el ataque, y si todo funciona correctamente, obtendré una meterpreter shell.  
+Y finalmente, con el comando `run` o `exploit` lanzaré el ataque, y si todo funciona correctamente, obtendré una meterpreter shell.  
 
 ![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg)
 
@@ -151,7 +151,7 @@ Entonces, configuro los demás parámetros.
 
 ![11](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/11.jpg)    
 
-Y finalmente lo ejecuto con el comando run, y permanecerá en escucha.  
+Y finalmente lo ejecuto con el comando `run`, y permanecerá en escucha.  
 Ahora, si ejecuto el archivo malicioso en la máquina víctima, obtendré una sesión meterpreter.   
 
 ![12](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/12.jpg)  
@@ -224,10 +224,11 @@ Configuro los parámetros necesarios y lanzo el ataque.
 Metasploit es un poco más lento en comparación con Hydra, pero el resultado es el mismo.    
 Para atacar FTP, haz exactamente lo mismo pero con el **auxiliary scanner** que se llama `ftp_login`.  
 
-**TIPS:** Para que sea un poco más rápido, configura `VERBOSE` en `false` con el comando `set VERBOSE false`.   
+**TIPS:**  
+Para que sea un poco más rápido, configura `VERBOSE` en `false` con el comando `set VERBOSE false`.     
 
 # Ataques de fuerza bruta a bases de datos  
-Per effettuare un attacco di forza bruta con Hydra contro un database MySQL, supponendo di sapere qual è il nome utente, userò sempre il solito comando visto nelle lezioni precedenti con ssh e ftp, cambierò solo l'ultimo parametro.  
+Para realizar un ataque de fuerza bruta con Hydra contra una base de datos MySQL, suponiendo que conozca el nombre de usuario, usaré el mismo comando que se mostró en las lecciones anteriores con SSH y FTP, cambiando solo el último parámetro.   
 
 `sudo hydra -l capybarauser -P /usr/share/wordlists/rockyou.txt mysql://10.10.10.9` 
 
@@ -240,11 +241,11 @@ Puedo hacerlo con la cuenta root con el comando:
 
 `tac /usr/share/wordlists/rockyou.txt > rockyou_inver.txt`  
 
-Una volta creato il file reverse_rockyou.txt se lo apro con nano posso notare che non sta ben formattato, contiene spazi e si sono modificate alcune password.   
+Una vez creado el archivo `reverse_rockyou.txt`, si lo abro con `nano`, puedo notar que no está bien formateado, contiene espacios y algunas contraseñas se han modificado.   
 
 ![20](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/20.jpg)   
 
-Cancello le lettere arancioni e poi con tr tolgo gli spazi digitando il comando:  
+Elimino las letras naranjas y luego, con `tr`, quito los espacios digitando el comando:   
 
 `cat rockyou_inver.txt | tr -d ' ' > reverse_rockyou.txt`  
 
@@ -292,9 +293,9 @@ Una vez creado el hash (podemos llamar al archivo como queramos; en este ejemplo
 
 ![26](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/26.jpg)    
 
-**KEEPASS**
-Se siamo in possesso di un database keepass (che ha una estensione .kdbx) posso sempre usare john.  
-Stesso procedimento visto con zip, l'unica differenza è che dovrò usare prima keepass2john in questo modo: 
+**KEEPASS**  
+Si tenemos un archivo de base de datos Keepass (con extensión `.kdbx`), siempre podemos usar `john`.  
+El mismo procedimiento que con los archivos ZIP, la única diferencia es que primero debo usar `keepass2john` de esta manera:  
 
 `sudo keepass2john nomedatabase.kdbx > hash`  
 
@@ -328,7 +329,7 @@ Ahora sé que el hash es un MD5, por lo que puedo pasárselo a John con esta opc
 ![30](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/30.jpg)    
 
 **TIPS**  
-Una web molto utile per decodificare password con hash MD5 ad esempio è crackstation.  
+Una web muy útil para descifrar contraseñas con hash MD5, por ejemplo, es CrackStation.   
 
 # EXPLOTACIÓN DE VULNERABILIDADES WEB  
 # ¿Qué es el fuzzing web? – Uso de Gobuster  
@@ -338,16 +339,16 @@ Puedo realizar fuzzing web con la herramienta Gobuster escribiendo el siguiente 
 `sudo gobuster dir -u http://10.10.10.6/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt`  
 
 TIPS 
-Per l'esame è molto raccomandabile usare questo dizionario:  
+Para el examen, es muy recomendable usar este diccionario:  
 /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt  
 
-RICERCA ESTENSIONI FILES  
-Se volessi ricercare files specifici, per esempio php, txt ecc. dovrò digitare il seguente comando:  
+**Búsqueda de extensiones de archivos**  
+Si quisiera buscar archivos específicos, como `php`, `txt`, etc., debo escribir el siguiente comando:  
 
 `sudo gobuster dir -u http://10.10.10.6/ -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -x php,txt,py,htm,html`  
 
-Un'alternativa a gobuster potrebbe essere dirb, che è un po' più semplice.  
-Il comando sarebbe:  
+Una alternativa a `gobuster` podría ser `dirb`, que es un poco más sencillo.   
+El comando sería:  
 
 `sudo dirb http://10.10.10.6`  
 
@@ -432,8 +433,8 @@ Puedo realizar la enumeración de páginas web con el siguiente comando:
 
 `sudo dirsearch -u http://10.10.10.12/`  
 
-Di forma automatica cerca già estensioni.  
-Se voglio passargli un dizionario un po' più completo posso dare il comando:  
+De forma automática, ya busca extensiones.  
+Si quiero proporcionarle un diccionario un poco más completo, puedo usar el comando:   
 
 `sudo dirsearch -u http://10.10.10.12/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://10.10.10.12/`   
 
@@ -509,7 +510,6 @@ export SHELL=bash`
 Si este tratamiento no funciona, puedo intentar este comando:  
 
 `python -c "import pty;pty.spawn('/bin/bash')"`   
-
 
 # Obtener una intrusión en el servidor mediante una webshell 
 
@@ -649,7 +649,6 @@ Y listo, ya hemos obtenido la lista de nombres de usuario y contraseñas de la b
 
 ![70](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/70.jpg)   
 
-
 # Hacking server Tomcat 
 Supongamos que encontramos, escaneando con nmap, un servidor Tomcat.  
 
@@ -687,7 +686,6 @@ PAYLOAD 2
 Ahora cargaremos los dos archivos y veremos cuál nos permite obtener un shell inverso.  
 
 ![76](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/76.jpg)    
-
 
 Una vez cargados los archivos, abrimos un shell y escuchamos en el puerto 6969 (el que se usa al crear el payload con msfvenom) y vemos qué pasa.  
 
@@ -850,8 +848,6 @@ mget *`
 Para conectarme a SMB con un usuario autenticado, debo escribir el comando:  
 
 `sudo smbclient //10.10.10.20/helios -U helios` 
-
-   
 
 # Enumeración de usuarios SAMBA y uso de RPCCLIENT 
 Supongamos que tenemos una máquina con el servicio samba activo.  
