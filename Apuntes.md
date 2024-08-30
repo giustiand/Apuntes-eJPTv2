@@ -330,7 +330,7 @@ Ahora sé que el hash es un MD5, por lo que puedo pasárselo a John con esta opc
 **TIPS**  
 Una web molto utile per decodificare password con hash MD5 ad esempio è crackstation.  
 
-# Explotación de vulnerabilidades web  
+# EXPLOTACIÓN DE VULNERABILIDADES WEB  
 # ¿Qué es el fuzzing web? – Uso de Gobuster  
 
 Puedo realizar fuzzing web con la herramienta Gobuster escribiendo el siguiente comando:  
@@ -764,6 +764,7 @@ Ahora podemos intentar conectarnos con el comando visto anteriormente, y cuando 
 
 `sudo ssh -i key.rsa gh0st@10.10.10.16`  
 
+# ENUMERACIÓN Y EXPLOTACIÓN DEL PROTOCOLO SMB, SAMBA Y SNMP
 # Enumeración y explotación básica del protocolo SMB (puerto 445) 
 Cuando veo un puerto 445 abierto, puedo intentar enumerar los recursos escribiendo este comando:  
 
