@@ -795,7 +795,7 @@ Si ahora quiero acceder a un recurso compartido, tendré que teclear:
 
 `sudo smbclient -U 'mario' //10.10.10.5/Users`  
 
-Y voila, así puedo entrar en la máquina y teclear comandos como «dir, cd etc».  
+Y listo, así puedo entrar en la máquina y teclear comandos como «dir, cd etc».  
 
 ![94](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/94.jpg)  
 
@@ -814,7 +814,10 @@ Pon el parámetro VERBOSE a false para que se ejecute un poco más rápido.
 Una vez que tengo la contraseña, puedo intentar iniciar una sesión smb con el módulo  
 exploit/windows/smb/psexec.  
 Como siempre configuro las opciones y pruebo a ver si funciona. 
-Puede funcionar o no, es cuestión de probar.  
+Puede funcionar o no, es cuestión de probar.   
+
+![97](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/97.jpg)   
+
 
 # Comandos SMB  
 Para iniciar una sesión nula y tratar de enumerar recursos interesantes, puedo escribir el comando:  
@@ -848,7 +851,7 @@ Para conectarme a SMB con un usuario autenticado, debo escribir el comando:
 
 `sudo smbclient //10.10.10.20/helios -U helios` 
 
-![97](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/97.jpg)    
+   
 
 # Enumeración de usuarios SAMBA y uso de RPCCLIENT 
 Supongamos que tenemos una máquina con el servicio samba activo.  
