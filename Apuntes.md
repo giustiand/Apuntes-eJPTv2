@@ -981,6 +981,42 @@ En este caso, solo debemos configurar el RHOSTS y poner la ruta completa, es dec
 
 ![125](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/125.jpg)   
 
+# ELEVACIÓN DE PRIVILEGIOS + POST EXPLOTACIÓN  
+# Elevación de privilegios en Linux – sudo -l  
+
+Supongamos que hemos obtenido una shell en una máquina víctima; ahora lo que queremos es elevar los privilegios y obtener acceso como root. 
+
+![126](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/126.jpg)  
+
+Una de las primeras cosas que podemos hacer es escribir el comando:  
+
+`sudo -l`  
+
+para ver si tenemos la posibilidad de ejecutar algún comando con privilegios de sudo.  
+
+![127](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/127.jpg)    
+
+Así es, como se puede ver, podemos ejecutar el comando vim con sudo.  
+Ahora solo queda buscar en gtfobins el comando que debemos lanzar para escalar privilegios.  
+
+![128](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/128.jpg)   
+
+**CONSEJO**  
+Siempre indica la ruta absoluta del ejecutable, por lo que en este caso el comando debería ser:  
+
+`sudo /usr/bin/vim -c ':!/bin/sh'`  
+
+¡y listo!  
+
+![129](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/129.jpg)    
+
+
+
+
+
+
+
+
 
 
 
