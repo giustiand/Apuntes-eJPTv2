@@ -70,7 +70,7 @@ C'è da dire che questo script fa "molto rumore" e non è consigliabile usarlo n
 Es conveniente también realizar escaneos del protocolo UDP.  
 Para hacerlo, por ejemplo, podemos usar el comando:  
 
-`sudo nmap -sU --top-ports 200 --min-rate=5000 -Pn 192.168.10.10`  
+`sudo nmap -sU --top-ports 200 --min-rate=5000 -Pn 192.168.10.10`    
 
 # EXPLOTACIÓN DE VULNERABILIDADES Y ATAQUES DE FUERZA BRUTA  
 # Uso básico de Metasploit – Explotación de EternalBlue en Windows  
@@ -815,6 +815,38 @@ Una vez que tengo la contraseña, puedo intentar iniciar una sesión smb con el 
 exploit/windows/smb/psexec.  
 Como siempre configuro las opciones y pruebo a ver si funciona. 
 Puede funcionar o no, es cuestión de probar.  
+
+# Comandos SMB  
+Para iniciar una sesión nula y tratar de enumerar recursos interesantes, puedo escribir el comando:  
+
+`sudo smbclient -L 10.10.10.20 -N`  
+
+Puedo hacer lo mismo con `smbmap`; la ventaja es que nos devuelve los permisos que tengo sobre los recursos descubiertos.  
+
+`sudo smbmap -H 10.10.10.20`  
+
+También puedo usar `crackmapexec`:  
+
+`sudo crackmapexec smb 10.10.10.20 -u '' -p '' --shares (per enumerare risorse)
+sudo crackmapexec smb 10.10.10.20 -u '' -p '' --users (per enumerare utenti)`  
+
+Una de las herramientas más completas es `enum4linux`:  
+
+`sudo enum4linux -a 10.10.10.20`  
+
+Para conectarnos a una unidad a la que tenemos acceso, debo escribir:  
+
+`sudo smbclient //10.10.10.20/anonymous 
+sudo smbclient //10.10.10.20/anonymous -N`  
+
+Para descargar varios archivos simultáneamente desde SMB, debo escribir:  
+
+`prompt (affinchè non mi chieda se voglio scaricare ogni file)
+mget *`  
+
+Para conectarme a SMB con un usuario autenticado, debo escribir el comando:  
+
+`sudo smbclient //10.10.10.20/helios -U helios` 
 
 ![97](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/97.jpg)    
 
