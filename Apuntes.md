@@ -870,7 +870,7 @@ y enumerarlo con wfuzz tecleando el comando:
 
 Entonces encontraría un dominio utils, y editando de nuevo el fichero hosts, también podría acceder a este dominio y continuar la enumeración.  
 
-![105_a](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/105_a.jpg)    
+![105](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/105.jpg)    
 
 # HACKING CMS
 # Hacking en entornos WordPress – Parte 1   
