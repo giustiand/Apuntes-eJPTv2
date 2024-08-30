@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/c00bc412-5ed1-4379-afbf-845c7d253fef)# CONCEPTOS BÁSICOS DE HACKING
+# CONCEPTOS BÁSICOS DE HACKING
 # Uso de netcat
 Si quiero obtener una reverse shell en mi máquina atacante, primero debo conocer la dirección IP, que puedo obtener con el siguiente comando:  
 
@@ -870,7 +870,115 @@ y enumerarlo con wfuzz tecleando el comando:
 
 Entonces encontraría un dominio utils, y editando de nuevo el fichero hosts, también podría acceder a este dominio y continuar la enumeración.  
 
+![105](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/105.jpg)    
+
+# HACKING CMS
+# Hacking en entornos WordPress – Parte 1   
+Supongamos que durante un escaneo con nmap descubrimos un puerto 80 donde está en ejecución un WordPress.  
+
 ![105](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/105.jpg)  
+
+Si al intentar navegar visualizáramos mal la página, como en este ejemplo:  
+
+![106](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/106.jpg)   
+
+Podría depender del hecho de que está apuntando a un dominio.  
+Para ver si es efectivamente así, deberemos analizar el código fuente de la página.  
+
+![107](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/107.jpg)    
+
+Efectivamente es así.  
+Por lo tanto, deberemos modificar el archivo /etc/hosts y recargar la página.  
+
+![108](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/108.jpg)      
+
+Una ruta muy común en WordPress es wp-login.  
+Si no carga, intenta con wp-login.php.  
+Esta ruta también podría haberla encontrado haciendo fuzzing con wfuzz o gobuster, etc.   
+
+![109](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/109.jpg)   
+
+# Hacking en entornos WordPress – Parte 2  
+Una herramienta muy útil para el escaneo de WordPress es WPSCAN.  
+Podemos escribir, por ejemplo, el comando:  
+
+`sudo wpscan --url http://10.10.190.76/blog --enumerate u,vp,vt`  
+
+esto nos permite enumerar usuarios (u), verificar si hay plugins vulnerables (vp) y comprobar si hay temas vulnerables (vt).  
+Puede ocurrir que con este comando no se detecten plugins, que en cambio se detectan con el comando:  
+
+`sudo wpscan --url http://10.10.190.76/blog --enumerate u,p,t`  
+
+**¡CONSEJOS!** 
+¡NO INGRESES EN LA DIRECCIÓN WP-LOGIN!  
+
+![110](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/110.jpg)   
+
+¡Perfecto! 
+Hemos descubierto que hay un usuario llamado admin. 
+
+Ahora podemos utilizar este comando para realizar un ataque de fuerza bruta y tratar de descubrir la contraseña.  
+
+`sudo wpscan --url http://10.10.190.76/blog --passwords /usr/share/wordlists/rockyou.txt --usernames admin`  
+
+![111](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/111.jpg)  
+
+Perfecto, tenemos un nombre de usuario y una contraseña.  
+Ahora lo que podemos hacer es acceder a la página wp-login e ingresar las credenciales recién obtenidas.  
+
+![112](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/112.jpg)   
+
+Una vez dentro, el objetivo debe ser cargar un archivo "malicioso" para obtener una reverse shell.  
+Si, como en este ejemplo, no tengo ningún panel de carga, puedo utilizar el menú "Appearance" y seleccionar "Theme Editor".   
+
+![113](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/113.jpg)   
+
+Ahora mi objetivo es cargar un código PHP que me permita obtener una reverse shell.  
+Dado que durante el examen no tengo acceso a Internet, debo crear un archivo malicioso .php con msfvenom y luego copiar todo el contenido, por ejemplo, en el archivo footer, que se cargará en todas las páginas de WordPress.  
+
+![114](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/114.jpg)  
+
+Entonces, abro este modelo, elimino todo el contenido y pego el contenido del archivo .php creado con msfvenom.    
+
+![115](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/115.jpg)    
+
+![116](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/116.jpg)    
+
+![117](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/117.jpg)    
+
+Y en este punto, si escucho en la máquina atacante y recargo la página, obtendré una reverse shell.  
+
+![118](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/118.jpg)  
+
+![119](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/119.jpg)     
+
+![120](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/120.jpg)     
+
+Recuerda generar otra shell porque, como sabemos, las generadas con msfvenom duran solo unos segundos y no son estables.  
+
+**¡CONSEJO!**  
+Si en el examen encontramos una cadena de texto como esta ZWxsaW90OkVSMjgtMDY1Mg== y queremos intentar descifrarla, podríamos usar este comando:  
+
+`echo 'ZWxsaW90OkVSMjgtMDY1Mg==' | base64 -d` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
