@@ -60,9 +60,9 @@ Ejemplo de comando de escaneo básico con nmap:
 -oN nombrearchivo para exportar en formato nmap  
 
 # Escaneos de vulnerabilidades con nmap  
-Supponiamo di aver scansionato una macchina Windows 7 con la porta 445 aperta.  
-Potremmo usare una utility di nmap per vedere se è vulnerabile.  
-C'è da dire che questo script fa "molto rumore" e non è consigliabile usarlo nel mondo reale.  
+Supongamos que hemos escaneado una máquina con Windows 7 y la puerta 445 está abierta.   
+Podríamos usar una utilidad de nmap para ver si es vulnerable.   
+Cabe mencionar que este script hace "mucho ruido" y no se recomienda usarlo en el mundo real.  
 
 `sudo nmap --script "vuln" -p445 192.168.10.10`  
 
