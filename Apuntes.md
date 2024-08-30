@@ -959,7 +959,35 @@ Recuerda generar otra shell porque, como sabemos, las generadas con msfvenom dur
 **¡CONSEJO!**  
 Si en el examen encontramos una cadena de texto como esta ZWxsaW90OkVSMjgtMDY1Mg== y queremos intentar descifrarla, podríamos usar este comando:  
 
-`echo 'ZWxsaW90OkVSMjgtMDY1Mg==' | base64 -d` 
+`echo 'ZWxsaW90OkVSMjgtMDY1Mg==' | base64 -d`   
+
+# Hacking en entornos Drupal  
+Supongamos que en el examen nos enfrentamos a un Drupal.  
+Una de las cosas más importantes es intentar descubrir el número de la versión.  
+
+![122](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/122.jpg)    
+
+En este caso, hemos tenido suerte y podríamos intentar navegar poniendo en la URL /drupal-7.57 y ver qué sucede.  
+
+![123](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/123.jpg)      
+
+Entonces, podríamos buscar exploits para Drupal 7 en Metasploit.  
+
+![124](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/124.jpg)    
+
+Uno de los exploits más utilizados es drupalgeddon2.  
+Lo seleccionamos e impostamos las opciones adecuadas.  
+En este caso, solo debemos configurar el RHOSTS y poner la ruta completa, es decir, http://10.10.10.19/drupal-7.57/, y después de unos segundos obtendremos una sesión meterpreter.   
+
+![125](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/125.jpg)   
+
+
+
+
+
+
+
+
 
 
 
