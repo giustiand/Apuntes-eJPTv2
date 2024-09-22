@@ -838,8 +838,9 @@ Una de las herramientas más completas es `enum4linux`:
 
 Para conectarnos a una unidad a la que tenemos acceso, debo escribir:  
 
-`sudo smbclient //10.10.10.20/anonymous 
-sudo smbclient //10.10.10.20/anonymous -N`  
+`sudo smbclient //10.10.10.20/anonymous`   
+
+`sudo smbclient //10.10.10.20/anonymous -N`  
 
 Para descargar varios archivos simultáneamente desde SMB, debo escribir:  
 
