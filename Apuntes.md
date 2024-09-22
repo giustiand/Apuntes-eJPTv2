@@ -828,8 +828,8 @@ Puedo hacer lo mismo con `smbmap`; la ventaja es que nos devuelve los permisos q
 
 También puedo usar `crackmapexec`:  
 
-`sudo crackmapexec smb 10.10.10.20 -u '' -p '' --shares (per enumerare risorse)  
-sudo crackmapexec smb 10.10.10.20 -u '' -p '' --users (per enumerare utenti)`  
+`sudo crackmapexec smb 10.10.10.20 -u '' -p '' --shares (per enumerare risorse)`    
+`sudo crackmapexec smb 10.10.10.20 -u '' -p '' --users (per enumerare utenti)`  
 
 Una de las herramientas más completas es `enum4linux`:  
 
