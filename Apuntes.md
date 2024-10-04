@@ -494,15 +494,15 @@ Cuando obtengo una reverse shell, debo tratarla porque, de lo contrario, no pued
 
 ![47](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/47.jpg)    
 
-Aquí están los pasos a seguir.  
-En la shell sin tratar, escribo en el siguiente orden:  
+Aquí están los pasos a seguir.    
+En la shell sin tratar, escribo en el siguiente orden:    
 
-`script /dev/null -c bash
-Dopodichè Ctrl +Z (il processo va in background)
-stty raw -echo; fg
-reset xterm (è molto probabile che non vedrò nulla quando lo digito)
-export TERM=xterm
-export SHELL=bash`  
+`script /dev/null -c bash  
+Dopodichè Ctrl +Z (il processo va in background)  
+stty raw -echo; fg  
+reset xterm (è molto probabile che non vedrò nulla quando lo digito)  
+export TERM=xterm  
+export SHELL=bash`    
 
 ![48](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/48.jpg)   
 
