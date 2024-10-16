@@ -514,7 +514,12 @@ luego `stty raw -echo; fg`
 ¡CONSEJOS!
 Si este tratamiento no funciona, puedo intentar este comando:  
 
-`python -c "import pty;pty.spawn('/bin/bash')"`   
+`python -c "import pty;pty.spawn('/bin/bash')"`    
+
+¡TIPS!  
+Si cuando digito los comandos las letras se borran y no caben puedo hacer esto.  
+En mi terminal ejecuto el comando `stty size` para ver cuantas filas y cuantas columnas tengo.  
+Luego voy a la shell ejecuto el comando, por ejemplo `stty rows 39 columns 144`  
 
 # Obtener una intrusión en el servidor mediante una webshell 
 
