@@ -171,7 +171,17 @@ Si hubiera querido atacar FTP, solo habría que cambiar el parámetro en el coma
 
 `sudo hydra -l juan -P /usr/share/wordlists/rockyou.txt ftp://10.10.10.7`   
 
-![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)   
+![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)     
+
+¡TIPS!  
+Si quisiera crear un diccionario personalizado, sabiendo, por ejemplo, que la contraseña contiene 5 caracteres y empieza con "p" y termina con "a", podría utilizar la herramienta crunch.  
+Entonces, escribiré el siguiente comando:  
+
+`sudo crunch 5 5 -t p@@@a -o mi_diccionario.txt`  
+
+- El primer "5" indica la longitud mínima de la contraseña.  
+- El segundo "5" indica la longitud máxima de la contraseña.
+- El símbolo "@" indica los caracteres que serán sustituidos por todas las combinaciones posibles de letras minúsculas, excluyendo las mayúsculas y los caracteres especiales.  
 
 # Uso de Hydra – Attacchi di forza bruta a utenti (SSH ed FTP)  
 
