@@ -174,7 +174,7 @@ Si hubiera querido atacar FTP, solo habría que cambiar el parámetro en el coma
 ![14](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/14.jpg)     
 
 ¡TIPS!  
-Si quisiera crear un diccionario personalizado, sabiendo, por ejemplo, que la contraseña contiene 5 caracteres y empieza con "p" y termina con "a", podría utilizar la herramienta crunch.  
+Si quisiera crear un diccionario personalizado, sabiendo, por ejemplo, que la contraseña contiene 5 caracteres y empieza con "p" y termina con "a", podría utilizar la herramienta **crunch**.  
 Entonces, escribiré el siguiente comando:  
 
 `sudo crunch 5 5 -t p@@@a -o mi_diccionario.txt`  
