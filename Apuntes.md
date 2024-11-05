@@ -181,7 +181,8 @@ Entonces, escribiré el siguiente comando:
 
 - El primer "5" indica la longitud mínima de la contraseña.  
 - El segundo "5" indica la longitud máxima de la contraseña.
-- El símbolo "@" indica los caracteres que serán sustituidos por todas las combinaciones posibles de letras minúsculas, excluyendo las mayúsculas y los caracteres especiales.  
+- El símbolo "@" indica los caracteres que serán sustituidos por todas las combinaciones posibles de letras minúsculas, excluyendo las mayúsculas y los caracteres especiales.
+- El parámetro "-o" se utiliza para indicar que se debe exportar el archivo con el nombre que deseemos.  
 
 # Uso de Hydra – Attacchi di forza bruta a utenti (SSH ed FTP)  
 
