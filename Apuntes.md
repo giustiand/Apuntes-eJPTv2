@@ -100,7 +100,7 @@ Y finalmente, con el comando `run` o `exploit` lanzaré el ataque, y si todo fun
 
 ![5](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/5.jpg)
 
-# Utilizzo basico de Metasploit – Exploitation vsftpd in Linux  
+# Uso básico de de Metasploit – Exploitation vsftpd in Linux  
 Iniciamos la máquina Metasploitable 2.0.0 y después de una primera exploración, vemos que tiene muchos puertos abiertos.  
 En particular, intentaremos analizar el puerto 21 y lanzaremos el comando:  
 
@@ -184,7 +184,7 @@ Entonces, escribiré el siguiente comando:
 - El símbolo "@" indica los caracteres que serán sustituidos por todas las combinaciones posibles de letras minúsculas, excluyendo las mayúsculas y los caracteres especiales.
 - El parámetro "-o" se utiliza para indicar que se debe exportar el archivo con el nombre que deseemos.  
 
-# Uso de Hydra – Attacchi di forza bruta a utenti (SSH ed FTP)  
+# Uso de Hydra – Ataques de fuerza bruta a utenti (SSH ed FTP)  
 
 Ahora veamos qué diccionario utilizar para enumerar los usuarios, suponiendo que ya conocemos la contraseña.  
 
@@ -262,7 +262,8 @@ Elimino las letras naranjas y luego, con `tr`, quito los espacios digitando el c
 
 ![21](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/21.jpg)   
 
-Listo! Ya lo tenemos!  
+Listo! 
+Ya lo tenemos!  
 
 ![22](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/22.jpg)  
 
@@ -289,7 +290,6 @@ Entonces, podríamos usar la contraseña obtenida para conectarnos, por ejemplo,
 # Ataques de fuerza bruta locales con John the Ripper  
 
 Si tenemos archivos ZIP, bases de datos KeePass o contraseñas en formato hash, podemos usar John the Ripper para intentar descifrarlas.  
-
 **ARCHIVO ZIP**    
 Supongamos que tenemos un archivo ZIP protegido por una contraseña.     
 Lo primero que debemos hacer es usar la utilidad `zip2john` y pasarle el archivo `.zip` con el comando:  
@@ -398,7 +398,8 @@ Para poder visualizarlo, deberé editar nuevamente el archivo `/etc/hosts` y agr
 
 ![37](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/37.jpg)   
 
-# Cómo realizar un ataque de transferencia de zona DNS 
+# Cómo realizar un ataque de transferencia de zona DNS   
+
 Supongamos que durante una exploración con Nmap encontramos abiertas la **puerta 53** (DNS) y la **puerta 80**, donde aparece un dominio, en este caso `hunterzone.nyx`.  
 
 ![38](https://github.com/giustiand/Apuntes-eJPTv2/blob/main/images/38.jpg)    
